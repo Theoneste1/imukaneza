@@ -8,6 +8,7 @@ module.exports = {
 		port: process.env.LOCAL_DB_PORT,
 		dialect: 'postgres',
 		operatorsAliases: 0,
+		logs:false,
 	},
 	test: {
 		use_env_variable: 'CI_DB_URL',
