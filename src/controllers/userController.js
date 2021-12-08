@@ -56,11 +56,11 @@ export default class Users {
     try {
       // check if user is exist in database
       const isUserExist = await userExist(email);
-      if (!isUserExist) return res.status(404).json({status:404, message:`You don't have account with this email ${email}!`});
-      if(isUserExist.verified === false) return res.status(400).json({status:400, message:`Your account is not activated!`});
+      if (!isUserExist) return res.status(404).json({status:404, error:`You don't have account with this email ${email}!`});
+      if(isUserExist.verified === false) return res.status(400).json({status:400, error:`Your account is not activated!`});
       const comparedPassword = comparePassword(password, isUserExist.password);
     
-      if(!comparedPassword) return res.status(400).json({status:400, message:"Password incorrect!"}) 
+      if(!comparedPassword) return res.status(400).json({status:400, error:"Password incorrect!"}) 
       const tokenPayload = {email:isUserExist.email, userAccess:isUserExist.userAccess, id:isUserExist.id};
   
       // generate user token
