@@ -73,4 +73,69 @@ export default class Users {
       return res.status(400).json({message: error.message, stack: error.stack});
     }
   }
+
+  static async getAllUsers (req, res) {
+
+    try {
+      // check if user is exist in database
+      const isUserExist = await User.findAll();
+      if (isUserExist.length === 0) return res.status(404).json({status:404, error:`No user registered yet!`});
+      
+      isUserExist.map((user) => {
+        user.password = '';
+
+      })
+      return res.status(200).json({status:200, message:"All user exist", users: isUserExist})
+      
+    } catch (error) {
+      return res.status(400).json({message: error.message});
+    }
+  }
+
+
+  static async getSingleUser (req, res) {
+    const { id } = req.params
+    try {
+      // check if user is exist in database
+      const isUserExist = await User.findOne({where: {id}});
+      if (!isUserExist) return res.status(404).json({status:404, error:`User does not exist!`});
+      
+     
+      isUserExist.password = '';
+
+      return res.status(200).json({status:200, message:"user retrieved successfully", user: isUserExist})
+      
+    } catch (error) {
+      return res.status(400).json({message: error.message});
+    }
+  }
+
+  static async changePassword (req, res) {
+    const{currentpassword, newpassword, confirmpassword } = req.body;
+    
+    const bearerAuth = req.headers.authorization;
+    const token = bearerAuth.split(" ")[1]
+    try {
+      const userIntoken = verifyToken(token)
+      // check if user is exist in database
+      const isUserExist = await userExist(userIntoken.payload.email);
+
+      if (!isUserExist) return res.status(404).json({status:404, error:`You don't have account with this email ${email}!`});
+      if(isUserExist.verified === false) return res.status(400).json({status:400, error:`Your account is not activated!`});
+      const comparedPassword = comparePassword(currentpassword, isUserExist.password);
+      
+    
+      if(!comparedPassword) return res.status(400).json({status:400, error:"Password incorrect!"}) 
+      if(newpassword !== confirmpassword) return res.status(400).json({status:400, error:"new Password and confirm password does not munch!"});
+
+      const hashedPassword = hashpassword(newpassword)
+      console.log(hashedPassword)
+      // update password
+      await User.update({password: hashedPassword}, {where: {id:isUserExist.id}})
+      return res.status(200).json({status:200, message:"password chenged successfully. You can login with a new password!"})
+      
+    } catch (error) {
+      return res.status(400).json({message: error.message, stack: error.stack});
+    }
+  }
 }
