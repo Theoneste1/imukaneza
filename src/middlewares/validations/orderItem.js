@@ -3,7 +3,7 @@ import Joi from 'joi';
 export function orderItemValidate(req, res, next) {
 
 	const orderItemValiation = Joi.object({
-		itemName: Joi.string().required().email(),
+		itemName: Joi.string().required().trim(),
 		description: Joi.string().required().trim(),
         quantity: Joi.string().required().trim(),
         rideId: Joi.number()
