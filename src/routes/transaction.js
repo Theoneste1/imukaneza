@@ -2,13 +2,13 @@ import express from "express";
 import Transactions from '../controllers/transaction';
 import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
 
-import { serviceValidate } from '../middlewares/validations/serviceVal';
+import { transactionValidate } from '../middlewares/validations/transactionVal';
 
 
 const router = express.Router()
  
 
-router.post('/create', isLoggedIn, Transactions.createTransaction);
+router.post('/create', isLoggedIn, transactionValidate, Transactions.createTransaction);
 router.get('/', isLoggedIn, Transactions.getTransactions);
 router.get('/:id', isLoggedIn, Transactions.getSingleTransaction);
 router.patch('/:id', isLoggedIn, Transactions.updateSingleTransaction);

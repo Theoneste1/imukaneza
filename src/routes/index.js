@@ -3,7 +3,7 @@ import userRouter from './user'
 import itemRouter from './orderItem'
 import serviceRouter from './service'
 import transactionRouter from './transaction'
-
+import ratingRouter from './rating'
 const router = express.Router()
 router.get('/', (req, res) => res.status(200).json({message: 'Welcome to Imukaneza system'}));
 router.use('/users', userRouter);
@@ -15,5 +15,8 @@ router.use('/services', serviceRouter);
 
 // transaction
 router.use('/transactions', transactionRouter)
+
+// rating
+router.use('/rating', ratingRouter)
 
 export default router
