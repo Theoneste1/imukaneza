@@ -4,7 +4,6 @@ import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
 
 import { orderItemValidate } from '../middlewares/validations/orderItem';
 
-
 const router = express.Router()
  
 

@@ -1,22 +1,30 @@
 
 import {Rider} from '../models'
+import {verifyToken} from '../utils/jwtoken'
 
-export default class Riders{
-  static async createRider(req, res) {
+export default class Rides{
+  static async createRide(req, res) {
     try {
       const {riderNumber,rider,relocator,agentInCharge,
         departure,destination,status,price,discription} = req.body;
-          const a_rider = await Rider.create({riderNumber,rider:'Theoneste',relocator,agentInCharge,
+        const userToken = req.headers.authorization;
+        const realToken = userToken.split(" ")[1];
+        const userDecodedData = verifyToken(realToken);
+  
+        const loggedUser = await User.findOne({ where: { email: userDecodedData.email } });
+
+
+          const a_ride = await Rider.create({riderNumber,rider,relocator:loggedUser.id,agentInCharge,
             departure,destination,status,price,discription});
           
-        return res.status(201).json({status:201,rider:a_rider, message: 'rider is successfully created',
+        return res.status(201).json({status:201,a_ride, message: 'rider is successfully created',
 
         });
     } catch (error) {
       return res.status(500).json({error:error.message, stacks:error.stack});
     }
   }
-  static async updateRider(req, res) {
+  static async updateRide(req, res) {
     try {
       const existRider = await Rider.findOne({ where: { id: req.params.id} });
 

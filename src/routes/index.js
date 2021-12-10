@@ -4,7 +4,6 @@ import itemRouter from './orderItem'
 import serviceRouter from './service'
 import transactionRouter from './transaction'
 import ratingRouter from './rating'
-import userRouter from './user';
 import riderRouter from './rider';
 
 const router = express.Router()
