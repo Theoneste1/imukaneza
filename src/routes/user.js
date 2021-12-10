@@ -3,7 +3,7 @@ import Users from '../controllers/userController';
 
 import { userValidate, loginValidate } from '../middlewares/validations/userValidation';
 import { changePassValidate } from "../middlewares/validations/changePassword";
-import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
+import { isLoggedIn } from "../middlewares/authorization/isLoggedIn";
 
 
 const router = express.Router()

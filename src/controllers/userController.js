@@ -8,14 +8,14 @@ import { sendingVerificationEMail } from '../utils/sendEmail';
 export default class Users {
   static async signUp(req, res) {
     try {
-      const { firstName,lastName,phoneNumber,userAccess,email,homeAddress, password } = req.body;
+      const { firstName,lastName,phoneNumber,email,homeAddress, password } = req.body;
       const isUserTableEmpty = await User.findAll();
      if(isUserTableEmpty.length === 0) {
 
           const hashedPassword = hashpassword(password);
           const user = await User.create({firstName,lastName,phoneNumber,userAccess:'superAdmin',email,homeAddress,password: hashedPassword});
-          delete user["password"];
-        sendingVerificationEMail(email,user.id)
+          user.password === ''
+        sendingVerificationEMail(email)
         return res.status(201).json({status:201,user:user, message: 'user is successfully created check your to verify your account!',
 
         });
@@ -23,7 +23,7 @@ export default class Users {
         const existUser = await userExist(email)
         if (existUser) return res.status(409).json({error:'user already exists'});
         const hashedPassword = hashpassword(password);
-        const user = await User.create({firstName,lastName,phoneNumber,userAccess,email,homeAddress,password: hashedPassword, status:'activated'});
+        const user = await User.create({firstName,lastName,phoneNumber,userAccess:'client',email,homeAddress,password: hashedPassword, status:'activated'});
         user.password === ''
 
         sendingVerificationEMail(email)

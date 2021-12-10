@@ -7,8 +7,7 @@ export function userValidate(req, res, next) {
 		email: Joi.string().min(4).required().email(),
 		phoneNumber: Joi.string().min(10).required(),
 		password: Joi.string().min(6).required().max(8).trim(),
-		homeAddress: Joi.string().required(),
-		userAccess: Joi.string().valid('superAdmin', 'subAdmin', 'client'),
+		homeAddress: Joi.string().required()
 	});
 	const result = userValiation.validate(req.body);
 	if (result.error) return res.status(400).json({ error: result.error.details[0].message });

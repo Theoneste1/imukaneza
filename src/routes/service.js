@@ -1,6 +1,6 @@
 import express from "express";
 import Services from '../controllers/service';
-import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
+import { isLoggedIn } from "../middlewares/authorization/isLoggedIn";
 
 import { serviceValidate } from '../middlewares/validations/serviceVal';
 
