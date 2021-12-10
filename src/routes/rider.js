@@ -1,5 +1,5 @@
 import express from "express";
-import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
+import { isLoggedIn } from "../middlewares/authorization/isLoggedIn";
 import Rides from '../controllers/riderController';
 
 

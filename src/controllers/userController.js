@@ -88,11 +88,42 @@ export default class Users {
       return res.status(200).json({status:200, message:"All user exist", users: isUserExist})
       
     } catch (error) {
-      return res.status(400).json({message: error.message});
+      return res.status(500).json({error: error.message});
     }
   }
 
+  static async getAllRiders (req, res) {
+    try {
+      // check if user is exist in database
+      const isUserExist = await User.findAll({where: {userAccess:'rider'}});
+      console.log(isUserExist)
+      if (isUserExist.length === 0) return res.status(404).json({status:404, error:`No riders registered yet!`});
+      
+      isUserExist.map((user) => {
+        user.password = '';
+      })
+      return res.status(200).json({status:200, message:"All riders exist", riders: isUserExist})
+      
+    } catch (error) {
+      console.log(error)
+      return res.status(500).json({error: error.message, stacks: error.stack});
+    }
+  }
 
+  static async changeRole (req, res){
+    try {
+      const {id} = req.params;
+
+      const isExist = await User.findOne({where: {id:id}})
+      if (!isExist) return res.status(404).json({status:404, error:`This user does not exist!`});
+      await User.update(req.body,{where: {id:isExist.id}});
+      return res.status(200).json({statua:200, message:"role changed successfully"})
+      
+    } catch (error) {
+      return res.status(500).json(error.message);
+    }
+  
+  }
   static async getSingleUser (req, res) {
     const { id } = req.params
     try {
