@@ -12,19 +12,44 @@ module.exports = {
         type: Sequelize.STRING
       },
       rider: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       relocator: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       agentInCharge: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       departure: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Locations',
+          key: 'id',
+        },
       },
       destination: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Locations',
+          key: 'id',
+        },
       },
       status: {
         type: Sequelize.STRING

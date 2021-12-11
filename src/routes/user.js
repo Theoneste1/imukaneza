@@ -19,5 +19,4 @@ router.get('/',isLoggedIn, Users.getAllUsers);
 router.get('/:id', isLoggedIn, Users.getSingleUser)
 router.patch('/changepassword', isLoggedIn, changePassValidate, Users.changePassword)
 
-
 export default router;

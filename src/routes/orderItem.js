@@ -9,7 +9,7 @@ const router = express.Router()
  
 
 router.post('/create', isLoggedIn, orderItemValidate, OrderItem.createOrderItem);
-router.get('/', isLoggedIn, OrderItem.getAllItem);
+router.get('/rides/:rideId', isLoggedIn, OrderItem.getAllItem);
 router.get('/:id', isLoggedIn, OrderItem.getSingleItem);
 router.patch('/:id', isLoggedIn, isClient, OrderItem.updateSingleItem);
 router.delete('/:id', isLoggedIn, isClient, OrderItem.deleteSingleItem);

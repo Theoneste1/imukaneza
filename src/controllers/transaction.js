@@ -1,10 +1,17 @@
-import {Transaction } from '../models'
+import {Transaction, User } from '../models'
+import { verifyToken } from '../utils/jwtoken';
 
 export default class Transactions{
     static async createTransaction(req, res){
+        const { rideId, price } = req.body;
         try {
-            const { rideId, relocator, price } = req.body;
-            const newTransaction = await Transaction.create({ rideId, relocator, price, status:'pending' })
+            const userToken = req.headers.authorization;
+            const realToken = userToken.split(" ")[1];
+            const userDecodedData = verifyToken(realToken);
+            
+            const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
+
+            const newTransaction = await Transaction.create({ rideId, relocator:loggedUser.id, price, status:'pending' })
             return res.status(201).json({message: 'transaction created successfully', transaction:newTransaction})
             
         } catch (error) {

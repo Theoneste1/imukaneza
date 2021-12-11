@@ -1,6 +1,7 @@
 
-import {Rider} from '../models'
+import {Rider, User, OrderItem, Location} from '../models'
 import {verifyToken} from '../utils/jwtoken'
+
 
 export default class Rides{
   static async createRide(req, res) {
@@ -10,8 +11,8 @@ export default class Rides{
         const userToken = req.headers.authorization;
         const realToken = userToken.split(" ")[1];
         const userDecodedData = verifyToken(realToken);
-  
-        const loggedUser = await User.findOne({ where: { email: userDecodedData.email } });
+        
+        const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
 
 
           const a_ride = await Rider.create({riderNumber,rider,relocator:loggedUser.id,agentInCharge,
@@ -52,12 +53,13 @@ export default class Rides{
 
   static async findOneRide(req, res) {
     try {
-      const existRider = await Rider.findOne({ where: { id: req.params.id} });
+      const existRider = await Rider.findOne({ where: { id: req.params.id},include:["OrderItems"] });
 
       if(!existRider) res.status(400).json({status:400,error:"This Rider is not exist"});
-      
+      const departure = await Location.findOne({where:{id: existRider.id}})
+      const destination = await Location.findOne({where:{id: existRider.id}})
       if(existRider){
-        return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found"})
+        return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found", departure, destination})
       }
         
     } catch (error) {

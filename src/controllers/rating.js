@@ -1,10 +1,15 @@
-import {Rating } from '../models'
-
+import {Rating, User } from '../models'
+import { verifyToken } from '../utils/jwtoken';
 export default class Ratings{
     static async createRating(req, res){
         try {
-            const { rate, relocator, description } = req.body;
-            const newRating = await Rating.create({ rate, relocator, description })
+            const userToken = req.headers.authorization;
+            const realToken = userToken.split(" ")[1];
+            const userDecodedData = verifyToken(realToken);
+            
+            const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
+            const { rate, description } = req.body;
+            const newRating = await Rating.create({ rate, relocator:loggedUser.id, description })
             return res.status(201).json({message: 'Rating created successfully', newRating})
             
         } catch (error) {

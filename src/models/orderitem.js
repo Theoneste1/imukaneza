@@ -11,11 +11,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       itemName: DataTypes.STRING,
       quantity: DataTypes.STRING,
-      description: DataTypes.STRING,
-      rideId: DataTypes.INTEGER,    
+      rideId:DataTypes.INTEGER,
+      description: DataTypes.STRING   
     },
-    {})
-  
+    {});
+    OrderItem.associate = (models) => {
+      OrderItem.belongsTo(models.Rider, {
+        foreignKey: 'rideId'
+      });
+    }
   return OrderItem;
 };
 
