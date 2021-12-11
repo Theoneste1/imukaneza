@@ -1,6 +1,7 @@
 
 import {Rider, User, OrderItem, Location} from '../models'
 import {verifyToken} from '../utils/jwtoken'
+import { Op } from 'sequelize'
 
 
 export default class Rides{
@@ -56,8 +57,8 @@ export default class Rides{
       const existRider = await Rider.findOne({ where: { id: req.params.id},include:["OrderItems"] });
 
       if(!existRider) res.status(400).json({status:400,error:"This Rider is not exist"});
-      const departure = await Location.findOne({where:{id: existRider.id}})
-      const destination = await Location.findOne({where:{id: existRider.id}})
+      const departure = await Location.findOne({where:{id: existRider.departure}})
+      const destination = await Location.findOne({where:{id: existRider.destination }})
       if(existRider){
         return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found", departure, destination})
       }
@@ -66,7 +67,27 @@ export default class Rides{
       return res.status(500).json({error:error.message, stacks:error.stack});
     }
   }
+  static async personalRide(req, res) {
+    try {
+      const userToken = req.headers.authorization;
+      const realToken = userToken.split(" ")[1];
+      const userDecodedData = verifyToken(realToken);
+      
+      const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
 
+      const existRider = await Rider.findAll({ where: { locator: loggedUser.id},include:["OrderItems"] });
+
+      if(!existRider) res.status(400).json({status:400,error:"This Rider is not exist"});
+      const departure = await Location.findOne({where:{id: existRider.departure}})
+      const destination = await Location.findOne({where:{id: existRider.destination }})
+      if(existRider){
+        return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found", departure, destination})
+      }
+        
+    } catch (error) {
+      return res.status(500).json({error:error.message, stacks:error.stack});
+    }
+  }
   static async findAllRides(req, res) {
     try {
       const allRiders = await Rider.findAll();

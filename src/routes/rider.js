@@ -9,6 +9,7 @@ const router = express.Router()
 router.post('/create',isLoggedIn, Rides.createRide);
 router.patch('/update/:id',isLoggedIn, Rides.updateRide);
 router.get('/findOne/:id',isLoggedIn, Rides.findOneRide);
+router.get('/personalRides',isLoggedIn, Rides.personalRide);
 router.get('/findAll',isLoggedIn, Rides.findAllRides);
 router.delete('/delete/:id',isLoggedIn, Rides.deleteRide);
 export default router;
