@@ -1,6 +1,6 @@
 import express from "express";
 import Transactions from '../controllers/transaction';
-import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
+import { isLoggedIn } from "../middlewares/authorization/isLoggedIn";
 
 import { transactionValidate } from '../middlewares/validations/transactionVal';
 

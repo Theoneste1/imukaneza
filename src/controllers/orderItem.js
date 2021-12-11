@@ -13,10 +13,11 @@ export default class OrderItems{
     }
 
     static async getAllItem(req, res) {
+        const { rideId } = req.params
         try {
 
-            const itemExist = await OrderItem.findAll({});
-
+            const itemExist = await OrderItem.findAll({where: {rideId}});
+            if(itemExist.length === 0) return res.status(404).json({error:'no items on this order/ride'})
             return res.status(200).json({message:'Item retrieved successfully', itemExist})
             
         } catch (error) {

@@ -23,11 +23,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     {})
   
-	// User.associate = (models) => {
-	// 	User.belongsTo(models.MODEL NAME, {
-  //     foreignKey: "ID",
-  //     as: "FIELD NAME",
-  //   });
-	// }
+    User.associate = (models) => {
+      User.hasMany(models.Rider, {
+        foreignKey: 'rider'
+      });
+      User.hasMany(models.Rider, {
+        foreignKey: 'relocator'
+      });
+      
+      User.hasMany(models.Rider, {
+        foreignKey: 'agentInCharge'
+      });
+    };
   return User;
 };

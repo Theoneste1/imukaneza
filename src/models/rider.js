@@ -15,9 +15,9 @@ module.exports = (sequelize, DataTypes) => {
   };
   Rider.init({
     riderNumber: DataTypes.STRING,
-    rider: DataTypes.STRING,
-    relocator: DataTypes.STRING,
-    agentInCharge: DataTypes.STRING,
+    rider: DataTypes.INTEGER,
+    relocator: DataTypes.INTEGER,
+    agentInCharge: DataTypes.INTEGER,
     departure: DataTypes.INTEGER,
     destination: DataTypes.INTEGER,
     status: DataTypes.STRING,
@@ -27,5 +27,26 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Rider',
   });
+
+  Rider.associate = (models) => {
+    Rider.hasMany(models.OrderItem, {
+      foreignKey: 'rideId'
+    });
+    Rider.belongsTo(models.User, {
+      foreignKey: 'rider'
+    });
+    Rider.belongsTo(models.User, {
+      foreignKey: 'relocator'
+    });
+    Rider.belongsTo(models.User, {
+      foreignKey: 'agentInCharge'
+    });
+    Rider.belongsTo(models.Location, {
+      foreignKey: 'departure'
+    });
+    Rider.belongsTo(models.Location, {
+      foreignKey: 'destination'
+    });
+  };
   return Rider;
 };

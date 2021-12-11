@@ -4,7 +4,6 @@ export function ratingValidate(req, res, next) {
 
 	const ratingValiation = Joi.object({
 		rate: Joi.string().required(),
-        relocator: Joi.number().required(),
 		description: Joi.string().required().trim(),
     
 	});

@@ -1,6 +1,6 @@
 import express from "express";
 import Ratings from '../controllers/rating';
-import { isLoggedIn } from "../middlewares/authentication/isLoggedIn";
+import { isLoggedIn } from "../middlewares/authorization/isLoggedIn";
 
 import { ratingValidate } from '../middlewares/validations/ratingVal';
 
