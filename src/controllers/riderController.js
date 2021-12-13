@@ -15,7 +15,6 @@ export default class Rides{
         
         const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
 
-
           const a_ride = await Rider.create({riderNumber,rider,relocator:loggedUser.id,agentInCharge,
             departure,destination,status,price,discription});
           
