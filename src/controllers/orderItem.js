@@ -12,6 +12,7 @@ export default class OrderItems{
         }
     }
 
+    //admin get items
     static async getAllItem(req, res) {
         const { rideId } = req.params
         try {
@@ -24,6 +25,8 @@ export default class OrderItems{
             return res.status(500).json({ error: error.message })
         }
     }
+
+    //A clients get items
 
     static async getSingleItem(req, res) {
         try {
