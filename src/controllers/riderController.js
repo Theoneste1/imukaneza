@@ -1,20 +1,19 @@
 
 import {Rider, User, OrderItem, Location} from '../models'
-import {verifyToken} from '../utils/jwtoken'
+import {userExist, verifyToken} from '../utils/jwtoken'
 import { Op } from 'sequelize'
 
 
 export default class Rides{
   static async createRide(req, res) {
     try {
-      const {riderNumber,rider,relocator,agentInCharge,
+      const {riderNumber,rider,agentInCharge,
         departure,destination,status,price,discription} = req.body;
         const userToken = req.headers.authorization;
         const realToken = userToken.split(" ")[1];
         const userDecodedData = verifyToken(realToken);
         
         const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
-
 
           const a_ride = await Rider.create({riderNumber,rider,relocator:loggedUser.id,agentInCharge,
             departure,destination,status,price,discription});
@@ -26,6 +25,7 @@ export default class Rides{
       return res.status(500).json({error:error.message, stacks:error.stack});
     }
   }
+
   static async updateRide(req, res) {
     try {
       const existRider = await Rider.findOne({ where: { id: req.params.id} });
@@ -56,7 +56,7 @@ export default class Rides{
     try {
       const existRider = await Rider.findOne({ where: { id: req.params.id},include:["OrderItems"] });
 
-      if(!existRider) res.status(400).json({status:400,error:"This Rider is not exist"});
+      if(!existRider) return res.status(400).json({status:400,error:"This Rider is not exist"});
       const departure = await Location.findOne({where:{id: existRider.departure}})
       const destination = await Location.findOne({where:{id: existRider.destination }})
       if(existRider){
@@ -67,27 +67,33 @@ export default class Rides{
       return res.status(500).json({error:error.message, stacks:error.stack});
     }
   }
+
   static async personalRide(req, res) {
     try {
+      let departure;
+      let destination;
       const userToken = req.headers.authorization;
       const realToken = userToken.split(" ")[1];
       const userDecodedData = verifyToken(realToken);
+     
+      const loggedUser = await userExist(userDecodedData.payload.email);
+
+      const existRider = await Rider.findAll({ where: {relocator:loggedUser.id},include:["OrderItems"] });
       
-      const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
-
-      const existRider = await Rider.findAll({ where: { locator: loggedUser.id},include:["OrderItems"] });
-
-      if(!existRider) res.status(400).json({status:400,error:"This Rider is not exist"});
-      const departure = await Location.findOne({where:{id: existRider.departure}})
-      const destination = await Location.findOne({where:{id: existRider.destination }})
-      if(existRider){
-        return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found", departure, destination})
-      }
-        
+      if(existRider.length === 0) return res.status(400).json({status:400,error:"You don't have any orders yet!"});
+      
+      existRider.map(async (order) => {
+       departure = await Location.findOne({where:{id: order.departure}})
+       destination = await Location.findOne({where:{id: order.destination }})
+      })
+      
+      return res.status(200).json({status:200,existRider:existRider, message:"A rider is successfuly found", departure, destination})
+    
     } catch (error) {
       return res.status(500).json({error:error.message, stacks:error.stack});
     }
   }
+
   static async findAllRides(req, res) {
     try {
       const allRiders = await Rider.findAll();
@@ -105,7 +111,13 @@ export default class Rides{
 
   static async deleteRide(req, res) {
     try {
-      const existRider = await Rider.findOne({ where: { id: req.params.id} });
+
+      const userToken = req.headers.authorization;
+      const realToken = userToken.split(" ")[1];
+      const userDecodedData = verifyToken(realToken);
+      
+      const loggedUser = await User.findOne({ where: { email: userDecodedData.payload.email } });
+      const existRider = await Rider.findOne({ where: { id: req.params.id,relocator: loggedUser.id} });
 
       if(!existRider) res.status(400).json({status:400,error:"This Rider is not yet exist"});
       
