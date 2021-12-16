@@ -15,7 +15,7 @@ export const sendingVerificationEMail = (email) => {
     subject:"Account verification!",
     html:`
     <h2>Dear ${email},</h2>
-    <p> click here to verify your account ${process.env.HOST}:${process.env.LOCALHOST_PORT}/api/v1/users/verify/${token} </p>
+    <p> click here to verify your account ${process.env.HOST}/api/v1/users/verify/${token} </p>
     `
   }
   return sgMail.send(message)
