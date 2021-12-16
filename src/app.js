@@ -30,4 +30,13 @@ app.all('*', (req, res, next) => {
   next(err);
 });
 
-app.listen(PORT, () => console.log(`server is starting and running! on port ${PORT}`))
+app.listen(PORT, () => {
+  console.log(`server is starting and running! on port ${PORT} ...`);
+}).on('error', (err) => {
+  if (err.errno === 'EADDRINUSE') {
+    console.log(`----- Port ${PORT} is busy, trying with port ${PORT + 1} -----`);
+    app.listen(PORT + 1);
+  } else {
+    console.log(err);
+  }
+});
