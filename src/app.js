@@ -6,7 +6,7 @@ import router from './routes/index'
 import db from './models/index';
 
 const app  = express()
-const PORT = process.env.LOCALHOST_PORT || 3200;
+const port = process.env.LOCALHOST_PORT || 3200;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
@@ -30,12 +30,12 @@ app.all('*', (req, res, next) => {
   next(err);
 });
 
-app.listen(PORT, () => {
-  console.log(`server is starting and running! on port ${PORT} ...`);
+app.listen(port, () => {
+  console.log(`server is starting and running! on port ${port} ...`);
 }).on('error', (err) => {
   if (err.errno === 'EADDRINUSE') {
-    console.log(`----- Port ${PORT} is busy, trying with port ${PORT + 1} -----`);
-    app.listen(PORT + 1);
+    console.log(`----- Port ${port} is busy, trying with port ${port + 1} -----`);
+    app.listen(port + 1);
   } else {
     console.log(err);
   }
