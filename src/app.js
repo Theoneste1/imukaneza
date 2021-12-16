@@ -6,7 +6,7 @@ import router from './routes/index'
 import db from './models/index';
 
 const app  = express()
-const port = process.env.LOCALHOST_PORT || 3200;
+const port = process.env.PORT || 3200;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
